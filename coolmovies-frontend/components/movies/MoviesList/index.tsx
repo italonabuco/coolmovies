@@ -4,10 +4,11 @@ import MovieCard from '../MovieCard';
 interface IMoviesList {
   data: Movie[];
   loading?: boolean;
+  onItemClick?: (id: string) => void;
 }
 
 //TODO: add skeleton to handle on loading
-const MoviesList: React.FC<IMoviesList> = ({ data }) => {
+const MoviesList: React.FC<IMoviesList> = ({ data, onItemClick }) => {
   return (
     <Grid
       container
@@ -17,7 +18,11 @@ const MoviesList: React.FC<IMoviesList> = ({ data }) => {
     >
       {data.map((item) => (
         <Grid item xs={6} sm={3} md={3} lg={2} key={item.id}>
-          <MovieCard img={item.imgUrl} title={item.title} />
+          <MovieCard
+            img={item.imgUrl}
+            title={item.title}
+            onClick={() => onItemClick?.(item.id)}
+          />
         </Grid>
       ))}
     </Grid>

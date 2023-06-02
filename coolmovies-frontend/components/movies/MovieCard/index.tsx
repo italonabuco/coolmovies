@@ -7,9 +7,10 @@ import Typography from '@mui/material/Typography';
 interface IMovieCardType {
   img: string;
   title: string;
+  onClick?: () => void;
 }
 
-const MovieCard: React.FC<IMovieCardType> = ({ img, title }) => {
+const MovieCard: React.FC<IMovieCardType> = ({ img, title, onClick }) => {
   return (
     <Box
       sx={{
@@ -17,7 +18,7 @@ const MovieCard: React.FC<IMovieCardType> = ({ img, title }) => {
         flexDirection: 'column',
       }}
     >
-      <CardActionArea>
+      <CardActionArea onClick={onClick}>
         <CardMedia
           component='img'
           sx={{ height: 300 }}

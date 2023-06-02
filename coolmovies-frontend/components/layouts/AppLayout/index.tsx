@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import { useRouter } from 'next/router';
 import React from 'react';
 
 interface IAppLayout {
@@ -12,11 +13,15 @@ interface IAppLayout {
 }
 
 const AppLayout: React.FC<IAppLayout> = ({ children, title }) => {
+  const router = useRouter();
+  const goToHome = () => router.push('/');
   return (
     <Box css={styles.root} sx={{ backgroundColor: 'background.default' }}>
       <AppBar position='static'>
         <Toolbar variant='dense'>
-          <Typography>{'CoolMovies'}</Typography>
+          <Typography onClick={goToHome} sx={{ cursor: 'pointer' }}>
+            {'CoolMovies'}
+          </Typography>
         </Toolbar>
       </AppBar>
       <Container sx={{ marginTop: 3 }} maxWidth='md'>
