@@ -1,3 +1,5 @@
+'use client';
+
 import { ApolloClient, InMemoryCache } from '@apollo/client';
 import { createStore } from './store';
 import { Provider } from 'react-redux';
