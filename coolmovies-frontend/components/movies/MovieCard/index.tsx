@@ -1,5 +1,4 @@
 import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
@@ -14,19 +13,33 @@ const MovieCard: React.FC<IMovieCardType> = ({ img, title, onClick }) => {
   return (
     <Box
       sx={{
+        height: '100%',
         display: 'flex',
-        flexDirection: 'column',
       }}
     >
-      <CardActionArea onClick={onClick}>
+      <CardActionArea
+        onClick={onClick}
+        sx={{ display: 'flex', flexDirection: 'column' }}
+      >
         <CardMedia
           component='img'
           sx={{ height: 300 }}
           image={img}
           alt={title}
         />
-        <Box sx={{ flex: '1 0 auto', p: 1 }}>
-          <Typography component='div' color='text.secondary'>
+        <Box
+          sx={{
+            flex: '1 0 auto',
+            width: '100%',
+            p: 1,
+            bgcolor: 'primary.dark',
+          }}
+        >
+          <Typography
+            component='div'
+            color='text.primary'
+            sx={{ '&:hover': { textDecoration: 'underline' } }}
+          >
             {title}
           </Typography>
         </Box>
