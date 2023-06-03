@@ -6,17 +6,18 @@ import { RootState } from '../../store';
 import { EpicDependencies } from '../../types';
 import { actions, SliceAction } from './slice';
 
-export const fetchMoviesEpic: Epic = (
+export const fetchReviewsEpic: Epic = (
   action$: Observable<SliceAction['fetch']>,
   state$: StateObservable<RootState>,
   { client }: EpicDependencies
 ) =>
   action$.pipe(
     filter(actions.fetch.match),
-    switchMap(async () => {
+    switchMap(async (action) => {
       try {
         const result = await client.query({
-          query: allMoviesQuery,
+          query: allMovieReviewsQuery,
+          variables: { movieId: action.payload.id },
         });
         return actions.loaded({ data: result.data });
       } catch (err) {
@@ -25,15 +26,21 @@ export const fetchMoviesEpic: Epic = (
     })
   );
 
-const allMoviesQuery = gql`
-  query AllMovies {
-    allMovies {
+const allMovieReviewsQuery = gql`
+  query AllMovieReviews($movieId: UUID!) {
+    reviews: allMovieReviews(condition: { movieId: $movieId }) {
       nodes {
         id
-        imgUrl
+        rating
         title
-        releaseDate
+        body
       }
+    }
+    movie: movieById(id: $movieId) {
+      id
+      imgUrl
+      title
+      releaseDate
     }
   }
 `;

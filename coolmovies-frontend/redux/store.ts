@@ -5,11 +5,13 @@ import {
   exampleEpics,
   moviesEpics,
   moviesReducer,
+  reviewsEpics,
+  reviewsReducer,
 } from './slices';
 import { combineEpics, createEpicMiddleware } from 'redux-observable';
 import { CreateStoreOptions } from './types';
 
-const rootEpic = combineEpics(exampleEpics, moviesEpics);
+const rootEpic = combineEpics(exampleEpics, moviesEpics, reviewsEpics);
 
 export const createStore = ({ epicDependencies }: CreateStoreOptions) => {
   const epicMiddleware = createEpicMiddleware({
@@ -22,6 +24,7 @@ export const createStore = ({ epicDependencies }: CreateStoreOptions) => {
     reducer: {
       example: exampleReducer,
       movies: moviesReducer,
+      reviews: reviewsReducer,
     },
   });
 

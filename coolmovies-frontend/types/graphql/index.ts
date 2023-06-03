@@ -10,3 +10,11 @@ type Movie = {
   releaseDate: string;
   title: string;
 };
+
+type Review = {
+  // TODO: implement other properties
+  id: string;
+  rating: number;
+  title: string;
+  body: string;
+};
