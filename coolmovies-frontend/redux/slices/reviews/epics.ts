@@ -34,6 +34,10 @@ const allMovieReviewsQuery = gql`
         rating
         title
         body
+        userByUserReviewerId {
+          name
+          id
+        }
       }
     }
     movie: movieById(id: $movieId) {

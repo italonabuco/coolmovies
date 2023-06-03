@@ -17,4 +17,8 @@ type Review = {
   rating: number;
   title: string;
   body: string;
+  userByUserReviewerId: {
+    name: string;
+    id: string;
+  };
 };

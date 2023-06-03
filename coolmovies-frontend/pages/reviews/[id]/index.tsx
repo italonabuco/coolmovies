@@ -4,6 +4,8 @@ import { useRouter } from 'next/router';
 import { reviewsActions, useAppDispatch, useAppSelector } from '../../../redux';
 import { useEffect } from 'react';
 import MovieInfo from '../../../components/movies/MovieInfo';
+import Typography from '@mui/material/Typography';
+import MovieReview from '../../../components/movies/MovieReview';
 
 const Reviews: NextPage = () => {
   const router = useRouter();
@@ -26,6 +28,20 @@ const Reviews: NextPage = () => {
           year={movie.releaseDate.slice(0, 'yyyy'.length)}
         />
       )}
+      <Typography
+        sx={{ marginTop: 3 }}
+        component='p'
+        variant='h6'
+        color='text.secondary'
+      >
+        People reviews
+      </Typography>
+      {reviews.map(({ body, id, title, rating, userByUserReviewerId }) => (
+        <MovieReview
+          key={id}
+          {...{ body, title, rating, userName: userByUserReviewerId.name }}
+        />
+      ))}
     </AppLayout>
   );
 };
