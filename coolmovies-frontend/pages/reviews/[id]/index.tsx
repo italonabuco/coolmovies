@@ -2,23 +2,44 @@ import { NextPage } from 'next';
 import AppLayout from '../../../components/layouts/AppLayout';
 import { useRouter } from 'next/router';
 import { reviewsActions, useAppDispatch, useAppSelector } from '../../../redux';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import MovieInfo from '../../../components/movies/MovieInfo';
 import Typography from '@mui/material/Typography';
 import MovieReview from '../../../components/movies/MovieReview';
-import MovieReviewForm from '../../../components/movies/MovieReviewForm';
+import MovieReviewForm, {
+  IMovieReviewForm,
+} from '../../../components/movies/MovieReviewForm';
 import Box from '@mui/material/Box';
 
 const Reviews: NextPage = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const { reviews, movie, mutation } = useAppSelector((state) => state.reviews);
+  const { reviews, movie, mutation, editingId } = useAppSelector(
+    (state) => state.reviews
+  );
   const { loading, error } = mutation;
 
   useEffect(() => {
     if (router.query.id)
       dispatch(reviewsActions.fetch({ id: router.query.id.toString() }));
   }, [dispatch, router.query.id]);
+
+  const onSubmitMovieReviewForm: IMovieReviewForm['onSubmit'] = useCallback(
+    (data, editing) => {
+      if (router.query.id) {
+        if (editing) {
+          return dispatch(reviewsActions.update({ ...data }));
+        }
+        return dispatch(
+          reviewsActions.add({
+            ...data,
+            movieId: router.query.id.toString(),
+          })
+        );
+      }
+    },
+    [dispatch, router.query.id]
+  );
 
   return (
     <AppLayout title={'Reviews'}>
@@ -29,19 +50,11 @@ const Reviews: NextPage = () => {
           year={movie.releaseDate.slice(0, 'yyyy'.length)}
         />
       )}
-      {router.query.id && (
+      {router.query.id && !Boolean(editingId) && (
         <Box sx={{ mt: 2 }}>
           <MovieReviewForm
-            onSubmit={(data, isNew) => {
-              if (router.query.id) {
-                dispatch(
-                  reviewsActions.add({
-                    ...data,
-                    movieId: router.query.id.toString(),
-                  })
-                );
-              }
-            }}
+            title='Add review'
+            onSubmit={onSubmitMovieReviewForm}
             loading={loading}
           />
         </Box>
@@ -55,13 +68,31 @@ const Reviews: NextPage = () => {
       >
         People reviews
       </Typography>
-      {reviews.map(({ body, id, title, rating, userByUserReviewerId }) => (
-        <MovieReview
-          key={id}
-          {...{ body, title, rating, userName: userByUserReviewerId.name }}
-          onDelete={() => dispatch(reviewsActions.delete({ id }))}
-        />
-      ))}
+      {reviews.map(({ body, id, title, rating, userByUserReviewerId }) =>
+        id !== editingId ? (
+          <MovieReview
+            key={id}
+            {...{ body, title, rating, userName: userByUserReviewerId.name }}
+            onEdit={() => dispatch(reviewsActions.editing(id))}
+            onDelete={() => dispatch(reviewsActions.delete({ id }))}
+          />
+        ) : (
+          <MovieReviewForm
+            key={id}
+            title='Edit review'
+            initialValues={{
+              body,
+              title,
+              rating,
+              userByUserReviewerId,
+            }}
+            editing
+            onSubmit={onSubmitMovieReviewForm}
+            loading={loading}
+            onCancel={() => dispatch(reviewsActions.editing())}
+          />
+        )
+      )}
     </AppLayout>
   );
 };

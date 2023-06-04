@@ -5,6 +5,7 @@ interface MoviesState {
   reviews: Review[];
   movie?: Movie;
   error?: string;
+  editingId?: string;
   mutation: {
     loading: boolean;
     error?: string;
@@ -63,6 +64,27 @@ export const slice = createSlice({
     deleted: (state, action: PayloadAction<{ id: string }>) => {
       state.reviews = state.reviews.filter(
         (review) => review.id !== action.payload.id
+      );
+    },
+    editing: (state, action: PayloadAction<string | undefined>) => {
+      state.editingId = action.payload;
+    },
+    update: (
+      state,
+      action: PayloadAction<Omit<Review, 'id' | 'userByUserReviewerId'>>
+    ) => {
+      state.mutation = { loading: true };
+    },
+    updated: (
+      state,
+      action: PayloadAction<Omit<Review, 'userByUserReviewerId'>>
+    ) => {
+      state.editingId = undefined;
+      state.mutation = { loading: false };
+      state.reviews = state.reviews.map((review) =>
+        review.id === action.payload.id
+          ? { ...review, ...action.payload }
+          : review
       );
     },
   },

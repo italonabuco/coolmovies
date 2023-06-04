@@ -17,17 +17,28 @@ interface CustomForm extends HTMLFormElement {
   readonly elements: CustomElements;
 }
 
-interface IMovieReviewForm {
+export interface IMovieReviewForm {
+  title: string;
   onSubmit: (
     data: Omit<Review, 'id' | 'userByUserReviewerId'> & {
       userId: string;
     },
-    isNew: boolean
+    editing: boolean
   ) => void;
   loading?: boolean;
+  initialValues?: Omit<Review, 'id'>;
+  editing?: boolean;
+  onCancel?: () => void;
 }
 
-const MovieReviewForm: React.FC<IMovieReviewForm> = ({ onSubmit, loading }) => {
+const MovieReviewForm: React.FC<IMovieReviewForm> = ({
+  title,
+  onSubmit,
+  loading,
+  initialValues,
+  editing,
+  onCancel,
+}) => {
   const handleSubmit = (event: React.FormEvent<CustomForm>) => {
     event.preventDefault();
     const { user, title, body, rating } = event.currentTarget.elements;
@@ -39,7 +50,7 @@ const MovieReviewForm: React.FC<IMovieReviewForm> = ({ onSubmit, loading }) => {
         body: body.value,
         rating: +rating.value,
       },
-      true
+      Boolean(editing)
     );
   };
   return (
@@ -50,21 +61,21 @@ const MovieReviewForm: React.FC<IMovieReviewForm> = ({ onSubmit, loading }) => {
       onSubmit={(e) => handleSubmit(e as any)}
     >
       <Typography component='legend' color='text.secondary'>
-        Add review
+        {title}
       </Typography>
       <TextField
         required
         name='user'
         label='User ID'
-        defaultValue=''
+        defaultValue={initialValues?.userByUserReviewerId.id}
         size='small'
-        disabled={loading}
+        disabled={loading || editing}
       />
       <TextField
         required
         name='title'
         label='Title'
-        defaultValue=''
+        defaultValue={initialValues?.title}
         size='small'
         disabled={loading}
       />
@@ -72,7 +83,7 @@ const MovieReviewForm: React.FC<IMovieReviewForm> = ({ onSubmit, loading }) => {
         required
         name='body'
         label='Comment'
-        defaultValue=''
+        defaultValue={initialValues?.body}
         size='small'
         multiline
         rows={3}
@@ -84,19 +95,24 @@ const MovieReviewForm: React.FC<IMovieReviewForm> = ({ onSubmit, loading }) => {
         </Typography>
         <Rating
           name='rating'
-          defaultValue={0}
+          defaultValue={initialValues?.rating}
           precision={1}
           disabled={loading}
         />
       </Box>
       <LoadingButton
-        variant='outlined'
+        variant='contained'
         color='warning'
         type='submit'
         loading={loading}
       >
         Submit review
       </LoadingButton>
+      {onCancel && (
+        <LoadingButton type='submit' disabled={loading} onClick={onCancel}>
+          Cancel
+        </LoadingButton>
+      )}
     </Card>
   );
 };

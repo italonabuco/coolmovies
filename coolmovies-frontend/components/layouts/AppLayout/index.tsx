@@ -24,7 +24,7 @@ const AppLayout: React.FC<IAppLayout> = ({ children, title }) => {
           </Typography>
         </Toolbar>
       </AppBar>
-      <Container sx={{ marginTop: 3 }} maxWidth='md'>
+      <Container sx={{ my: 3 }} maxWidth='md'>
         <Typography
           sx={{ marginBottom: 3, color: 'text.secondary' }}
           variant='h4'

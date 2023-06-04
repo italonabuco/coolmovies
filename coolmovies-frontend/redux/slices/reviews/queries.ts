@@ -46,3 +46,13 @@ export const deleteMovieReviewByIdMutation = gql`
     }
   }
 `;
+
+export const updateMovieReviewByIdMutation = gql`
+  mutation UpdateMovieReviewById($input: UpdateMovieReviewByIdInput!) {
+    updateMovieReviewById(input: $input) {
+      movieReview {
+        id
+      }
+    }
+  }
+`;

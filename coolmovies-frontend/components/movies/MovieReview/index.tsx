@@ -19,6 +19,7 @@ interface IMoviewReview {
   title: string;
   userName: string;
   onDelete: () => void;
+  onEdit: () => void;
 }
 
 const MovieReview: React.FC<IMoviewReview> = ({
@@ -27,6 +28,7 @@ const MovieReview: React.FC<IMoviewReview> = ({
   title,
   userName,
   onDelete,
+  onEdit,
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -71,7 +73,7 @@ const MovieReview: React.FC<IMoviewReview> = ({
       <Typography color='grey.400' sx={{ marginLeft: 1 }}>
         {body}
       </Typography>
-      <IconButton>
+      <IconButton onClick={onEdit}>
         <Image
           src='/edit.svg'
           alt='Edit review'

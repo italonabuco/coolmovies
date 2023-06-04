@@ -8,6 +8,7 @@ import {
   allMovieReviewsQuery,
   createMovieReviewMutation,
   deleteMovieReviewByIdMutation,
+  updateMovieReviewByIdMutation,
 } from './queries';
 
 export const fetchReviewsEpic: Epic = (
@@ -89,6 +90,37 @@ export const deleteReviewEpic: Epic = (
         });
       } catch (err: any) {
         alert(err?.message || 'Error deleting');
+      }
+    })
+  );
+
+export const updateReviewEpic: Epic = (
+  action$: Observable<SliceAction['update']>,
+  state$: StateObservable<RootState>,
+  { client }: EpicDependencies
+) =>
+  action$.pipe(
+    filter(actions.update.match),
+    switchMap(async (action) => {
+      try {
+        const { body, rating, title } = action.payload;
+        const result = await client.mutate({
+          mutation: updateMovieReviewByIdMutation,
+          variables: {
+            input: {
+              id: state$.value.reviews.editingId,
+              movieReviewPatch: { body, title, rating },
+            },
+          },
+        });
+        return actions.updated({
+          id: result.data.updateMovieReviewById.movieReview.id,
+          body,
+          title,
+          rating,
+        });
+      } catch (err: any) {
+        alert(err?.message || 'Error updating');
       }
     })
   );
