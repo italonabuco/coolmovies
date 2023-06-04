@@ -3,6 +3,8 @@ import type { AppProps } from 'next/app';
 import React, { FC } from 'react';
 import Head from 'next/head';
 import { ReduxProvider } from '../redux';
+import { ThemeProvider } from '@mui/material';
+import { MuiTheme } from '../libs/mui';
 
 const App: FC<AppProps> = ({ Component, pageProps }) => {
   return (
@@ -14,7 +16,9 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
         <meta name='viewport' content='width=device-width, initial-scale=1.0' />
       </Head>
       <ReduxProvider>
-        <Component {...pageProps} />
+        <ThemeProvider theme={MuiTheme}>
+          <Component {...pageProps} />
+        </ThemeProvider>
       </ReduxProvider>
     </>
   );
