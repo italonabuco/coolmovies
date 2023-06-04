@@ -35,14 +35,17 @@ export const addReviewEpic: Epic = (
     filter(actions.add.match),
     switchMap(async (action) => {
       try {
+        const partialReviewInfo = {
+          title: action.payload.title,
+          body: action.payload.body,
+          rating: action.payload.rating,
+        };
         const result = await client.mutate({
           mutation: createMovieReviewMutation,
           variables: {
             input: {
               movieReview: {
-                title: action.payload.title,
-                body: action.payload.body,
-                rating: action.payload.rating,
+                ...partialReviewInfo,
                 movieId: action.payload.movieId,
                 userReviewerId: action.payload.userId,
               },
@@ -51,9 +54,7 @@ export const addReviewEpic: Epic = (
         });
         const { createMovieReview } = result.data;
         return actions.added({
-          title: action.payload.title,
-          body: action.payload.body,
-          rating: action.payload.rating,
+          ...partialReviewInfo,
           id: createMovieReview.movieReview.id,
           userByUserReviewerId:
             createMovieReview.movieReview.userByUserReviewerId,
