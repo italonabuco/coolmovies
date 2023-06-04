@@ -1,7 +1,10 @@
+import { DeleteOutline } from '@mui/icons-material';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
 import Rating from '@mui/material/Rating';
 import Typography from '@mui/material/Typography';
+import Image from 'next/image';
 
 interface IMoviewReview {
   body: string;
@@ -22,7 +25,7 @@ const MovieReview: React.FC<IMoviewReview> = ({
     .join('')
     .toUpperCase();
   return (
-    <Box sx={{ py: 2 }}>
+    <Box sx={{ py: 1 }}>
       <Box
         sx={{
           display: 'flex',
@@ -54,6 +57,25 @@ const MovieReview: React.FC<IMoviewReview> = ({
       <Typography color='grey.400' sx={{ marginLeft: 1 }}>
         {body}
       </Typography>
+      <IconButton>
+        <Image
+          src='/edit.svg'
+          alt='Edit review'
+          width='20'
+          height='20'
+          css={{
+            filter: 'brightness(0) invert(1)',
+          }}
+        />
+      </IconButton>
+      <IconButton>
+        <DeleteOutline
+          height='20'
+          width='20'
+          htmlColor='white'
+          fontSize='small'
+        />
+      </IconButton>
     </Box>
   );
 };
