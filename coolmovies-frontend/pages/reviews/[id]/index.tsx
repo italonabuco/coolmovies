@@ -59,6 +59,7 @@ const Reviews: NextPage = () => {
         <MovieReview
           key={id}
           {...{ body, title, rating, userName: userByUserReviewerId.name }}
+          onDelete={() => dispatch(reviewsActions.delete({ id }))}
         />
       ))}
     </AppLayout>

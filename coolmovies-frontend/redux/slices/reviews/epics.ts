@@ -4,7 +4,11 @@ import { switchMap, filter } from 'rxjs/operators';
 import { RootState } from '../../store';
 import { EpicDependencies } from '../../types';
 import { actions, SliceAction } from './slice';
-import { allMovieReviewsQuery, createMovieReviewMutation } from './queries';
+import {
+  allMovieReviewsQuery,
+  createMovieReviewMutation,
+  deleteMovieReviewByIdMutation,
+} from './queries';
 
 export const fetchReviewsEpic: Epic = (
   action$: Observable<SliceAction['fetch']>,
@@ -63,6 +67,28 @@ export const addReviewEpic: Epic = (
         const errorMessage = err?.message || 'Error adding :(';
         alert(errorMessage);
         return actions.addError(errorMessage);
+      }
+    })
+  );
+
+export const deleteReviewEpic: Epic = (
+  action$: Observable<SliceAction['delete']>,
+  state$: StateObservable<RootState>,
+  { client }: EpicDependencies
+) =>
+  action$.pipe(
+    filter(actions.delete.match),
+    switchMap(async (action) => {
+      try {
+        const result = await client.mutate({
+          mutation: deleteMovieReviewByIdMutation,
+          variables: { input: { id: action.payload.id } },
+        });
+        return actions.deleted({
+          id: result.data.deleteMovieReviewById.movieReview.id,
+        });
+      } catch (err: any) {
+        alert(err?.message || 'Error deleting');
       }
     })
   );

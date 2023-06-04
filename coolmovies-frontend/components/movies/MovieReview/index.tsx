@@ -11,6 +11,7 @@ interface IMoviewReview {
   rating: number;
   title: string;
   userName: string;
+  onDelete: () => void;
 }
 
 const MovieReview: React.FC<IMoviewReview> = ({
@@ -18,6 +19,7 @@ const MovieReview: React.FC<IMoviewReview> = ({
   rating,
   title,
   userName,
+  onDelete,
 }) => {
   const initials = userName
     .split(' ')
@@ -68,7 +70,7 @@ const MovieReview: React.FC<IMoviewReview> = ({
           }}
         />
       </IconButton>
-      <IconButton>
+      <IconButton onClick={onDelete}>
         <DeleteOutline
           height='20'
           width='20'

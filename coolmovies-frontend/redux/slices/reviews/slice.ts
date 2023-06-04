@@ -59,6 +59,12 @@ export const slice = createSlice({
     addError: (state, action: PayloadAction<string>) => {
       state.mutation = { loading: false, error: action.payload };
     },
+    delete: (state, action: PayloadAction<{ id: string }>) => {},
+    deleted: (state, action: PayloadAction<{ id: string }>) => {
+      state.reviews = state.reviews.filter(
+        (review) => review.id !== action.payload.id
+      );
+    },
   },
 });
 
