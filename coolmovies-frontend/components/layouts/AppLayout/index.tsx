@@ -39,7 +39,7 @@ const AppLayout: React.FC<IAppLayout> = ({ children, title }) => {
 
 const styles = {
   root: css({
-    height: '100vh',
+    minHeight: '100vh',
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
