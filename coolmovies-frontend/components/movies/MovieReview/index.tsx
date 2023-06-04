@@ -1,10 +1,17 @@
 import { DeleteOutline } from '@mui/icons-material';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
 import Rating from '@mui/material/Rating';
 import Typography from '@mui/material/Typography';
 import Image from 'next/image';
+import { useState } from 'react';
 
 interface IMoviewReview {
   body: string;
@@ -21,6 +28,11 @@ const MovieReview: React.FC<IMoviewReview> = ({
   userName,
   onDelete,
 }) => {
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => setOpen(true);
+  const handleClickClose = () => setOpen(false);
+
   const initials = userName
     .split(' ')
     .map((name) => name.charAt(0))
@@ -70,7 +82,7 @@ const MovieReview: React.FC<IMoviewReview> = ({
           }}
         />
       </IconButton>
-      <IconButton onClick={onDelete}>
+      <IconButton onClick={handleClickOpen}>
         <DeleteOutline
           height='20'
           width='20'
@@ -78,6 +90,27 @@ const MovieReview: React.FC<IMoviewReview> = ({
           fontSize='small'
         />
       </IconButton>
+      <Dialog
+        open={open}
+        onClose={handleClickClose}
+        aria-labelledby='draggable-dialog-title'
+      >
+        <DialogTitle id='draggable-dialog-title'>Delete review</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete this review? You won&apos;t be able
+            to undo it.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button autoFocus onClick={handleClickClose} color='inherit'>
+            Cancel
+          </Button>
+          <Button onClick={onDelete} color='error' variant='contained'>
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
