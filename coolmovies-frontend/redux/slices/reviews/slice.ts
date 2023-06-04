@@ -5,11 +5,18 @@ interface MoviesState {
   reviews: Review[];
   movie?: Movie;
   error?: string;
+  mutation: {
+    loading: boolean;
+    error?: string;
+  };
 }
 
 const initialState: MoviesState = {
   loading: false,
   reviews: [],
+  mutation: {
+    loading: false,
+  },
 };
 
 export const slice = createSlice({
@@ -33,6 +40,24 @@ export const slice = createSlice({
     loadError: (state) => {
       state.error = 'Error fetching :(';
       state.loading = false;
+    },
+    add: (
+      state,
+      action: PayloadAction<
+        Omit<Review, 'id' | 'userByUserReviewerId'> & {
+          userId: string;
+          movieId: string;
+        }
+      >
+    ) => {
+      state.mutation = { loading: true };
+    },
+    added: (state, action: PayloadAction<Review>) => {
+      state.mutation = { loading: false };
+      state.reviews = [action.payload, ...state.reviews];
+    },
+    addError: (state, action: PayloadAction<string>) => {
+      state.mutation = { loading: false, error: action.payload };
     },
   },
 });
