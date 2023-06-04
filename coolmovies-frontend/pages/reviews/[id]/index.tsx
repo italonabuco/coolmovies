@@ -6,13 +6,14 @@ import { useEffect } from 'react';
 import MovieInfo from '../../../components/movies/MovieInfo';
 import Typography from '@mui/material/Typography';
 import MovieReview from '../../../components/movies/MovieReview';
+import MovieReviewForm from '../../../components/movies/MovieReviewForm';
+import Box from '@mui/material/Box';
 
 const Reviews: NextPage = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const { reviews, movie, loading, error } = useAppSelector(
-    (state) => state.reviews
-  );
+  const { reviews, movie, mutation } = useAppSelector((state) => state.reviews);
+  const { loading, error } = mutation;
 
   useEffect(() => {
     if (router.query.id)
@@ -28,6 +29,24 @@ const Reviews: NextPage = () => {
           year={movie.releaseDate.slice(0, 'yyyy'.length)}
         />
       )}
+      {router.query.id && (
+        <Box sx={{ mt: 2 }}>
+          <MovieReviewForm
+            onSubmit={(data, isNew) => {
+              if (router.query.id) {
+                dispatch(
+                  reviewsActions.add({
+                    ...data,
+                    movieId: router.query.id.toString(),
+                  })
+                );
+              }
+            }}
+            loading={loading}
+          />
+        </Box>
+      )}
+
       <Typography
         sx={{ marginTop: 3 }}
         component='p'
